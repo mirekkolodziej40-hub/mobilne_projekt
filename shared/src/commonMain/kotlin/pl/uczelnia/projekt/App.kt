@@ -9,11 +9,11 @@ import androidx.compose.ui.unit.dp
 
 // 1. Definicja ekranów wraz z etykietą i ikoną (emoji)
 sealed class Screen(val route: String, val title: String, val icon: String) {
-    object Home : Screen("home", "Start", "🏠")
-    object Search : Screen("search", "Szukaj", "🔍")
-    object Notifications : Screen("notifications", "Powiadomienia", "🔔")
-    object Favorites : Screen("favorites", "Ulubione", "⭐")
-    object Profile : Screen("profile", "Profil", "👤")
+    object Alarms : Screen("alarms", "Alarmy", "🚨")
+    object Map : Screen("map", "Mapa", "🗺️")
+    object Report : Screen("report", "Zgłoś", "📢")
+    object Instructions : Screen("instructions", "Instrukcje", "📖")
+    object Settings : Screen("settings", "Ustawienia", "⚙️")
 }
 
 @Composable
@@ -21,15 +21,15 @@ fun App() {
     MaterialTheme {
         // Lista 5 ekranów obsługiwanych przez nawigację
         val items = listOf(
-            Screen.Home,
-            Screen.Search,
-            Screen.Notifications,
-            Screen.Favorites,
-            Screen.Profile
+            Screen.Alarms,
+            Screen.Map,
+            Screen.Report,
+            Screen.Instructions,
+            Screen.Settings
         )
 
         // Stan przechowujący aktualnie wybraną zakładkę
-        var selectedScreen by remember { mutableStateOf<Screen>(Screen.Home) }
+        var selectedScreen by remember { mutableStateOf<Screen>(Screen.Alarms) }
 
         // Responsywny układ z użyciem BoxWithConstraints (reaguje na szerokość ekranu)
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
@@ -92,10 +92,10 @@ fun App() {
 @Composable
 fun ScreenContent(screen: Screen) {
     when (screen) {
-        is Screen.Home -> Text("Ekran Główny", style = MaterialTheme.typography.headlineMedium)
-        is Screen.Search -> Text("Ekran Wyszukiwania", style = MaterialTheme.typography.headlineMedium)
-        is Screen.Notifications -> Text("Ekran Powiadomień", style = MaterialTheme.typography.headlineMedium)
-        is Screen.Favorites -> Text("Ekran Ulubionych", style = MaterialTheme.typography.headlineMedium)
-        is Screen.Profile -> Text("Ekran Profilu", style = MaterialTheme.typography.headlineMedium)
+        is Screen.Alarms -> Text("Ekran Alarmów", style = MaterialTheme.typography.headlineMedium)
+        is Screen.Map -> Text("Ekran Mapy", style = MaterialTheme.typography.headlineMedium)
+        is Screen.Report -> Text("Ekran Zgłoszeń", style = MaterialTheme.typography.headlineMedium)
+        is Screen.Instructions -> Text("Ekran Instrukcji", style = MaterialTheme.typography.headlineMedium)
+        is Screen.Settings -> Text("Ekran Ustawień", style = MaterialTheme.typography.headlineMedium)
     }
 }
