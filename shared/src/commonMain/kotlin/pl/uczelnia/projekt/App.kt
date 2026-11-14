@@ -9,6 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 
 // 1. Definicja ekranów
 sealed class Screen(val route: String, val title: String, val icon: String) {
@@ -29,8 +31,32 @@ sealed class Screen(val route: String, val title: String, val icon: String) {
     }
 }
 
+// Obserwator cyklu życia (Laboratorium 3 - LifecycleEventEffect & DisposableEffect)
+@Composable
+fun ObserwatorCyklu(nazwa: String) {
+    DisposableEffect(Unit) {
+        println("CYKL [$nazwa]: kompozycja dodana")
+        onDispose { println("CYKL [$nazwa]: kompozycja usunięta") }
+    }
+    LifecycleEventEffect(Lifecycle.Event.ON_START) {
+        println("CYKL [$nazwa]: ON_START")
+    }
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        println("CYKL [$nazwa]: ON_RESUME")
+    }
+    LifecycleEventEffect(Lifecycle.Event.ON_PAUSE) {
+        println("CYKL [$nazwa]: ON_PAUSE")
+    }
+    LifecycleEventEffect(Lifecycle.Event.ON_STOP) {
+        println("CYKL [$nazwa]: ON_STOP")
+    }
+}
+
 @Composable
 fun App() {
+    // Rejestracja obserwatora cyklu życia w kodzie wspólnym (commonMain)
+    ObserwatorCyklu("App")
+
     MaterialTheme {
         val items = listOf(
             Screen.Home,
@@ -149,13 +175,13 @@ fun ScreenContent(
 
         when (screen) {
             is Screen.Home -> {
-                Text("Witaj w aplikacji! Stan jest w pełni zachowywany przy obrocie i wstrzymaniu.")
+                Text("Witaj w aplikacji! Cykl życia i stan są w pełni monitorowane.")
             }
             is Screen.Search -> {
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = onSearchQueryChanged,
-                    label = { Text("Wpisz szukaną frazę...") },
+                    label = { Text("Wpisz szukaną frazu...") },
                     modifier = Modifier.fillMaxWidth(0.8f)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -177,7 +203,7 @@ fun ScreenContent(
                 Text(if (notificationsEnabled) "Powiadomienia włączone" else "Powiadomienia wyłączone")
             }
             is Screen.Favorites -> {
-                Text("Twoje ulubione elementy są bezpieczne.")
+                Text("Twoje ulubione elementy są zachowane.")
             }
             is Screen.Profile -> {
                 OutlinedTextField(
