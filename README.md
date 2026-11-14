@@ -5,6 +5,17 @@ This is a Kotlin Multiplatform project targeting Android and iOS.
 
 ---
 
+## Etap 1 - Interfejs użytkownika i nawigacja
+
+W ramach pierwszego etapu projektu zaimplementowano podstawę aplikacji mobilnej:
+1. **Start projektu i temat**: Uruchomienie projektu Kotlin Multiplatform z Compose Multiplatform, opierającego się na systemie zarządzania bezpieczeństwem i ewakuacją.
+2. **Motyw i biblioteka komponentów**: Wykorzystanie nowoczesnego systemu stylów Material 3 (`MaterialTheme`).
+3. **Pięć ekranów**: Stworzenie dedykowanych widoków: Start, Szukaj, Powiadomienia, Ulubione oraz Profil.
+4. **Dolna nawigacja**: Implementacja paska nawigacji (`NavigationBar` i `NavigationBarItem`) do przełączania między ekranami.
+5. **Układ responsywny**: Wykorzystanie `BoxWithConstraints` w celu dynamicznej zmiany nawigacji na boczny pasek (`NavigationRail`) na szerszych ekranach (tablety, komputery / macOS).
+
+---
+
 ## Etap 2 - Cykl życia aplikacji i zachowanie stanu
 
 W ramach drugiego etapu projektu (zgodnie z wymaganiami Laboratorium 3) zaimplementowano:
