@@ -21,7 +21,7 @@ import pl.uczelnia.projekt.viewmodel.IncydentViewModel
 sealed class Screen(val route: String, val title: String, val icon: String) {
     object Home : Screen("home", "Start", "🏠")
     object Search : Screen("search", "Szukaj", "🔍")
-    object Notifications : Screen("notifications", "Powiadomienia", "🔔")
+    object Notifications : Screen("notifications", "Alerty", "🔔")
     object Favorites : Screen("favorites", "Ulubione", "⭐")
     object Profile : Screen("profile", "Profil", "👤")
 
