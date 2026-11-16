@@ -11,6 +11,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
+import androidx.lifecycle.viewmodel.compose.viewModel
+import pl.uczelnia.projekt.data.InMemoryIncydentRepository
+import pl.uczelnia.projekt.ui.IncydentForm
+import pl.uczelnia.projekt.ui.IncydentList
+import pl.uczelnia.projekt.viewmodel.IncydentViewModel
 
 // 1. Definicja ekranów
 sealed class Screen(val route: String, val title: String, val icon: String) {
@@ -54,27 +59,90 @@ fun ObserwatorCyklu(nazwa: String) {
 
 @Composable
 fun App() {
-    // Rejestracja obserwatora cyklu życia w kodzie wspólnym (commonMain)
     ObserwatorCyklu("App")
 
     MaterialTheme {
-        val items = listOf(
-            Screen.Home,
-            Screen.Search,
-            Screen.Notifications,
-            Screen.Favorites,
-            Screen.Profile
-        )
+        val items = listOf(Screen.Home, Screen.Search, Screen.Notifications, Screen.Favorites, Screen.Profile)
 
-        // Zachowanie wybranej zakładki przy obrocie / wstrzymaniu aplikacji za pomocą rememberSaveable
+        // ViewModel (warstwa prezentacji) -> repozytorium (warstwa danych)
+        val vm: IncydentViewModel = viewModel { IncydentViewModel(InMemoryIncydentRepository()) }
+
+        // Nawigacja: wybrana zakładka + opcjonalny ekran formularza (dodawanie / edycja)
         var selectedRoute by rememberSaveable { mutableStateOf(Screen.Home.route) }
+        var formOpen by rememberSaveable { mutableStateOf(false) }
+        var editedId by rememberSaveable { mutableStateOf<Long?>(null) }
         val selectedScreen = Screen.fromRoute(selectedRoute)
 
-        // Stany ekranów zachowywane przy obrocie i wstrzymaniu (rememberSaveable)
         var searchQuery by rememberSaveable { mutableStateOf("") }
         var profileName by rememberSaveable { mutableStateOf("") }
         var profileEmail by rememberSaveable { mutableStateOf("") }
         var notificationsEnabled by rememberSaveable { mutableStateOf(true) }
+
+        val incydenty by vm.incydenty.collectAsState()
+
+        fun openForm(id: Long?) { editedId = id; formOpen = true }
+        fun selectTab(route: String) { selectedRoute = route; formOpen = false }
+
+        val onEdit: (pl.uczelnia.projekt.data.Incydent) -> Unit = { openForm(it.id) }
+
+        val tabContent: @Composable () -> Unit = {
+            when (selectedScreen) {
+                is Screen.Home -> Box(Modifier.fillMaxSize()) {
+                    IncydentList(
+                        incydenty, "Brak elementów. Dodaj pierwszy przyciskiem +",
+                        onEdit, { vm.usun(it.id) }, { vm.przelaczUlubiony(it.id) }
+                    )
+                    FloatingActionButton(
+                        onClick = { openForm(null) },
+                        modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
+                    ) { Text("＋", style = MaterialTheme.typography.titleLarge) }
+                }
+                is Screen.Search -> Column(Modifier.fillMaxSize()) {
+                    OutlinedTextField(
+                        value = searchQuery,
+                        onValueChange = { searchQuery = it },
+                        label = { Text("Wpisz szukaną frazę...") },
+                        modifier = Modifier.fillMaxWidth().padding(16.dp)
+                    )
+                    val wyniki = incydenty.filter {
+                        searchQuery.isNotBlank() &&
+                            (it.tytul.contains(searchQuery, true) || it.lokalizacja.contains(searchQuery, true) || it.opis.contains(searchQuery, true))
+                    }
+                    IncydentList(
+                        wyniki, if (searchQuery.isBlank()) "Wpisz frazę, aby wyszukać" else "Brak wyników dla: \"$searchQuery\"",
+                        onEdit, { vm.usun(it.id) }, { vm.przelaczUlubiony(it.id) }
+                    )
+                }
+                is Screen.Favorites -> IncydentList(
+                    incydenty.filter { it.ulubiony }, "Brak ulubionych elementów",
+                    onEdit, { vm.usun(it.id) }, { vm.przelaczUlubiony(it.id) }
+                )
+                else -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    ScreenContent(
+                        screen = selectedScreen,
+                        searchQuery = searchQuery,
+                        onSearchQueryChanged = { searchQuery = it },
+                        profileName = profileName,
+                        onProfileNameChanged = { profileName = it },
+                        profileEmail = profileEmail,
+                        onProfileEmailChanged = { profileEmail = it },
+                        notificationsEnabled = notificationsEnabled,
+                        onNotificationsToggled = { notificationsEnabled = it }
+                    )
+                }
+            }
+        }
+
+        val formContent: @Composable () -> Unit = {
+            // key: formularz inicjalizuje się od nowa dla każdego edytowanego elementu
+            key(editedId) {
+                IncydentForm(
+                    incydent = editedId?.let { vm.znajdz(it) },
+                    onSave = { t, l, o, p -> vm.zapisz(editedId, t, l, o, p) },
+                    onBack = { formOpen = false }
+                )
+            }
+        }
 
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
             val isWideScreen = maxWidth >= 600.dp
@@ -88,28 +156,13 @@ fun App() {
                                 icon = { Text(screen.icon, style = MaterialTheme.typography.titleMedium) },
                                 label = { Text(screen.title) },
                                 selected = selectedScreen == screen,
-                                onClick = { selectedRoute = screen.route }
+                                onClick = { selectTab(screen.route) }
                             )
                         }
                         Spacer(modifier = Modifier.weight(1f))
                     }
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .weight(1f),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        ScreenContent(
-                            screen = selectedScreen,
-                            searchQuery = searchQuery,
-                            onSearchQueryChanged = { searchQuery = it },
-                            profileName = profileName,
-                            onProfileNameChanged = { profileName = it },
-                            profileEmail = profileEmail,
-                            onProfileEmailChanged = { profileEmail = it },
-                            notificationsEnabled = notificationsEnabled,
-                            onNotificationsToggled = { notificationsEnabled = it }
-                        )
+                    Box(modifier = Modifier.fillMaxSize().weight(1f)) {
+                        if (formOpen) formContent() else tabContent()
                     }
                 }
             } else {
@@ -121,29 +174,14 @@ fun App() {
                                     icon = { Text(screen.icon, style = MaterialTheme.typography.titleMedium) },
                                     label = { Text(screen.title) },
                                     selected = selectedScreen == screen,
-                                    onClick = { selectedRoute = screen.route }
+                                    onClick = { selectTab(screen.route) }
                                 )
                             }
                         }
                     }
                 ) { innerPadding ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        ScreenContent(
-                            screen = selectedScreen,
-                            searchQuery = searchQuery,
-                            onSearchQueryChanged = { searchQuery = it },
-                            profileName = profileName,
-                            onProfileNameChanged = { profileName = it },
-                            profileEmail = profileEmail,
-                            onProfileEmailChanged = { profileEmail = it },
-                            notificationsEnabled = notificationsEnabled,
-                            onNotificationsToggled = { notificationsEnabled = it }
-                        )
+                    Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+                        if (formOpen) formContent() else tabContent()
                     }
                 }
             }

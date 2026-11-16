@@ -30,6 +30,17 @@ W ramach drugiego etapu projektu (zgodnie z wymaganiami Laboratorium 3) zaimplem
 
 ---
 
+## Etap 3 - Architektura warstwowa, nawigacja i CRUD
+
+1. **Podział na warstwy** (`shared/src/commonMain/.../projekt`):
+   - **UI** – `App.kt`, `ui/IncydentScreens.kt` (lista, formularz; Compose, bez logiki biznesowej),
+   - **ViewModel** – `viewmodel/IncydentViewModel.kt` (logika prezentacji, walidacja, stan jako `StateFlow`),
+   - **Repozytorium / dane** – `data/IncydentRepository.kt` (interfejs + `InMemoryIncydentRepository`), model `data/Incydent.kt`.
+2. **Nawigacja**: dolny pasek / boczny `NavigationRail` między 5 zakładkami oraz ekran formularza (dodawanie/edycja) z przyciskiem „Wróć”; stan nawigacji zachowywany przy obrocie.
+3. **CRUD** na liście zgłoszeń (zakładka Start): dodawanie (przycisk ＋), edycja, usuwanie z potwierdzeniem, oznaczanie jako ulubione (lista w zakładce Ulubione), wyszukiwanie w zakładce Szukaj.
+
+---
+
 ### Uruchamianie aplikacji
 
 - Android app: `./gradlew :androidApp:assembleDebug`
