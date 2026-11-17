@@ -5,7 +5,7 @@ This is a Kotlin Multiplatform project targeting Android and iOS.
 
 ---
 
-## Etap 2 - Interfejs użytkownika i nawigacja
+## Etap 1 - Interfejs użytkownika i nawigacja
 
 W ramach pierwszego etapu projektu zaimplementowano podstawę aplikacji mobilnej:
 1. **Start projektu i temat**: Uruchomienie projektu Kotlin Multiplatform z Compose Multiplatform, opierającego się na systemie zarządzania bezpieczeństwem i ewakuacją.
@@ -16,7 +16,7 @@ W ramach pierwszego etapu projektu zaimplementowano podstawę aplikacji mobilnej
 
 ---
 
-## Etap 3 - Cykl życia aplikacji i zachowanie stanu
+## Etap 2 - Cykl życia aplikacji i zachowanie stanu
 
 W ramach drugiego etapu projektu (zgodnie z wymaganiami Laboratorium 3) zaimplementowano:
 1. **Obserwację zdarzeń cyklu życia (`LifecycleEventEffect`)**:
@@ -30,7 +30,7 @@ W ramach drugiego etapu projektu (zgodnie z wymaganiami Laboratorium 3) zaimplem
 
 ---
 
-## Etap 4 - Architektura warstwowa, nawigacja i CRUD
+## Etap 3 - Architektura warstwowa, nawigacja i CRUD
 
 1. **Podział na warstwy** (`shared/src/commonMain/.../projekt`):
    - **UI** – `App.kt`, `ui/IncydentScreens.kt` (lista, formularz; Compose, bez logiki biznesowej),
