@@ -110,16 +110,35 @@ fun App() {
                 Box(Modifier.weight(1f).fillMaxWidth()) {
                     when (selectedScreen) {
                         is Screen.Home -> {
-                            IncydentList(
-                                incydenty, "Brak zgłoszeń. Dodaj pierwsze przyciskiem +",
-                                onEdit, { vm.usun(it.id) }, { vm.przelaczUlubiony(it.id) }
-                            )
-                            FloatingActionButton(
-                                onClick = { openForm(null) },
-                                containerColor = MaterialTheme.colorScheme.tertiary,
-                                contentColor = MaterialTheme.colorScheme.onTertiary,
-                                modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
-                            ) { Icon(Icons.Filled.Add, contentDescription = "Dodaj zgłoszenie") }
+                            val fab: @Composable (Modifier) -> Unit = { m ->
+                                FloatingActionButton(
+                                    onClick = { openForm(null) },
+                                    containerColor = MaterialTheme.colorScheme.tertiary,
+                                    contentColor = MaterialTheme.colorScheme.onTertiary,
+                                    modifier = m
+                                ) { Icon(Icons.Filled.Add, contentDescription = "Dodaj zgłoszenie") }
+                            }
+                            BoxWithConstraints(Modifier.fillMaxSize()) {
+                                if (maxWidth > maxHeight) {
+                                    // Poziomo: FAB w osobnej kolumnie obok listy, nie nachodzi na akcje kart.
+                                    Row(Modifier.fillMaxSize()) {
+                                        IncydentList(
+                                            incydenty, "Brak zgłoszeń. Dodaj pierwsze przyciskiem +",
+                                            onEdit, { vm.usun(it.id) }, { vm.przelaczUlubiony(it.id) },
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                        Box(Modifier.fillMaxHeight().padding(16.dp), contentAlignment = Alignment.BottomEnd) {
+                                            fab(Modifier)
+                                        }
+                                    }
+                                } else {
+                                    IncydentList(
+                                        incydenty, "Brak zgłoszeń. Dodaj pierwsze przyciskiem +",
+                                        onEdit, { vm.usun(it.id) }, { vm.przelaczUlubiony(it.id) }
+                                    )
+                                    fab(Modifier.align(Alignment.BottomEnd).padding(16.dp))
+                                }
+                            }
                         }
                         is Screen.Search -> Column(Modifier.fillMaxSize()) {
                             OutlinedTextField(
@@ -207,7 +226,7 @@ fun App() {
                         }
                     }
                 ) { innerPadding ->
-                    Box(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+                    Box(modifier = Modifier.fillMaxSize().padding(innerPadding).consumeWindowInsets(innerPadding)) {
                         if (formOpen) formContent() else tabContent()
                     }
                 }
@@ -313,19 +332,29 @@ fun ScreenContent(
                     OutlinedTextField(
                         value = profileName,
                         onValueChange = onProfileNameChanged,
+                        singleLine = true,
                         label = { Text("Imię i nazwisko (Formularz)") },
                         modifier = Modifier.fillMaxWidth()
                     )
                     OutlinedTextField(
                         value = profileEmail,
                         onValueChange = onProfileEmailChanged,
+                        singleLine = true,
                         label = { Text("Adres E-mail") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
                 SekcjaKarta("Podsumowanie") {
-                    Text("Wprowadzono: $profileName ($profileEmail)")
+                    val imie = profileName.trim()
+                    val mail = profileEmail.trim()
+                    Text(
+                        when {
+                            imie.isEmpty() && mail.isEmpty() -> "Uzupełnij dane powyżej"
+                            imie.isNotEmpty() && mail.isNotEmpty() -> "Wprowadzono: $imie ($mail)"
+                            else -> "Wprowadzono: ${imie.ifEmpty { mail }}"
+                        }
+                    )
                 }
             }
         }

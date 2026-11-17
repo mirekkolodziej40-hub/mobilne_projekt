@@ -10,6 +10,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -87,11 +88,12 @@ data class PriorytetKolory(val tlo: Color, val tekst: Color)
 
 @Composable
 fun priorytetKolory(p: Priorytet): PriorytetKolory {
-    val dark = isSystemInDarkTheme()
+    // Ręczny przełącznik motywu: rozpoznajemy ciemny motyw po kolorze tła, a nie po ustawieniu systemu.
+    val dark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     return when (p) {
-        Priorytet.WYSOKI -> if (dark) PriorytetKolory(Color(0xFF7A1F1F), Color(0xFFFFDAD6)) else PriorytetKolory(Color(0xFFFFDAD6), Color(0xFF8C1D18))
-        Priorytet.SREDNI -> if (dark) PriorytetKolory(Color(0xFF6B4E00), Color(0xFFFFE08A)) else PriorytetKolory(Color(0xFFFFE9A8), Color(0xFF5C4300))
-        Priorytet.NISKI -> if (dark) PriorytetKolory(Color(0xFF1F5130), Color(0xFFB7F0C4)) else PriorytetKolory(Color(0xFFC8F0D2), Color(0xFF14532D))
+        Priorytet.WYSOKI -> if (dark) PriorytetKolory(Color(0xFF5C1A1A), Color(0xFFFFB4AB)) else PriorytetKolory(Color(0xFFFFDAD6), Color(0xFF8C1D18))
+        Priorytet.SREDNI -> if (dark) PriorytetKolory(Color(0xFF5A4000), Color(0xFFFFD866)) else PriorytetKolory(Color(0xFFFFE9A8), Color(0xFF5C4300))
+        Priorytet.NISKI -> if (dark) PriorytetKolory(Color(0xFF17432A), Color(0xFF9DE3B0)) else PriorytetKolory(Color(0xFFC8F0D2), Color(0xFF14532D))
     }
 }
 

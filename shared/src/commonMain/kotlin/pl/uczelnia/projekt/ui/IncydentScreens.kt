@@ -1,6 +1,8 @@
 package pl.uczelnia.projekt.ui
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,6 +21,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -157,7 +163,7 @@ fun IncydentList(
 }
 
 /** Formularz dodawania (incydent == null) i edycji elementu. */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun IncydentForm(
     incydent: Incydent?,
@@ -171,7 +177,13 @@ fun IncydentForm(
     var priorytet by rememberSaveable { mutableStateOf((incydent?.priorytet ?: Priorytet.SREDNI).name) }
     var blad by rememberSaveable { mutableStateOf(false) }
 
-    Column(modifier.fillMaxSize()) {
+    val focusManager = LocalFocusManager.current
+
+    Column(
+        modifier.fillMaxSize()
+            .imePadding()
+            .pointerInput(Unit) { detectTapGestures(onTap = { focusManager.clearFocus() }) }
+    ) {
         TopAppBar(
             title = { Text(if (incydent == null) "Nowy element" else "Edycja elementu") },
             navigationIcon = {
@@ -180,6 +192,7 @@ fun IncydentForm(
                 }
             }
         )
+        // Cała treść (z przyciskami na końcu) przewija się, więc w poziomie i przy klawiaturze nic nie znika.
         Column(
             Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()).padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -188,18 +201,30 @@ fun IncydentForm(
                 value = tytul, onValueChange = { tytul = it; blad = false },
                 label = { Text("Tytuł *") }, isError = blad,
                 supportingText = { if (blad) Text("Tytuł jest wymagany") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
                 value = lokalizacja, onValueChange = { lokalizacja = it },
-                label = { Text("Lokalizacja") }, modifier = Modifier.fillMaxWidth()
+                label = { Text("Lokalizacja") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
                 value = opis, onValueChange = { opis = it },
-                label = { Text("Opis") }, minLines = 3, modifier = Modifier.fillMaxWidth()
+                label = { Text("Opis") }, minLines = 3, maxLines = 6,
+                modifier = Modifier.fillMaxWidth()
             )
             Text("Priorytet", style = MaterialTheme.typography.labelLarge)
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Priorytet.entries.forEach { p ->
                     val k = priorytetKolory(p)
                     FilterChip(
@@ -213,13 +238,9 @@ fun IncydentForm(
                     )
                 }
             }
-        }
-        Column(
-            Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
             Button(
                 onClick = {
+                    focusManager.clearFocus()
                     if (onSave(tytul, lokalizacja, opis, Priorytet.valueOf(priorytet))) onBack() else blad = true
                 },
                 modifier = Modifier.fillMaxWidth()
