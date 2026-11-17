@@ -41,7 +41,7 @@ W ramach drugiego etapu projektu (zgodnie z wymaganiami Laboratorium 3) zaimplem
 
 ---
 
-## Etap 4 - Warstwa wizualna (bez zmian w działaniu)
+## Zmiany poza etapami - warstwa wizualna (bez zmian w działaniu)
 
 1. **Własny motyw** (`ui/theme/Theme.kt`): stonowany granat z pomarańczowym akcentem, wersja jasna i ciemna, własne zaokrąglenia (`Shapes`) i typografia (`Typography`).
 2. **Przełącznik motywu jasny/ciemny** w nagłówku każdej zakładki (słońce – suwak – księżyc); domyślnie zgodny z ustawieniem systemu, wybór zachowywany przy obrocie ekranu (`rememberSaveable`).
