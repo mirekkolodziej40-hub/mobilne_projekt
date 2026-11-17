@@ -2,11 +2,26 @@ package pl.uczelnia.projekt
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import pl.uczelnia.projekt.ui.theme.ProjektTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -18,12 +33,12 @@ import pl.uczelnia.projekt.ui.IncydentList
 import pl.uczelnia.projekt.viewmodel.IncydentViewModel
 
 // 1. Definicja ekranów
-sealed class Screen(val route: String, val title: String, val icon: String) {
-    object Home : Screen("home", "Start", "🏠")
-    object Search : Screen("search", "Szukaj", "🔍")
-    object Notifications : Screen("notifications", "Alerty", "🔔")
-    object Favorites : Screen("favorites", "Ulubione", "⭐")
-    object Profile : Screen("profile", "Profil", "👤")
+sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
+    object Home : Screen("home", "Zgłoszenia", Icons.Filled.Home)
+    object Search : Screen("search", "Szukaj", Icons.Filled.Search)
+    object Notifications : Screen("notifications", "Alerty", Icons.Filled.Notifications)
+    object Favorites : Screen("favorites", "Ulubione", Icons.Filled.Star)
+    object Profile : Screen("profile", "Profil", Icons.Filled.Person)
 
     companion object {
         fun fromRoute(route: String): Screen = when (route) {
@@ -60,8 +75,12 @@ fun ObserwatorCyklu(nazwa: String) {
 @Composable
 fun App() {
     ObserwatorCyklu("App")
+    val systemDark = androidx.compose.foundation.isSystemInDarkTheme()
 
-    MaterialTheme {
+    // Ręczny wybór motywu (domyślnie zgodny z ustawieniem systemu)
+    var ciemny by rememberSaveable { mutableStateOf(systemDark) }
+
+    ProjektTheme(darkTheme = ciemny) {
         val items = listOf(Screen.Home, Screen.Search, Screen.Notifications, Screen.Favorites, Screen.Profile)
 
         // ViewModel (warstwa prezentacji) -> repozytorium (warstwa danych)
@@ -86,49 +105,57 @@ fun App() {
         val onEdit: (pl.uczelnia.projekt.data.Incydent) -> Unit = { openForm(it.id) }
 
         val tabContent: @Composable () -> Unit = {
-            when (selectedScreen) {
-                is Screen.Home -> Box(Modifier.fillMaxSize()) {
-                    IncydentList(
-                        incydenty, "Brak elementów. Dodaj pierwszy przyciskiem +",
-                        onEdit, { vm.usun(it.id) }, { vm.przelaczUlubiony(it.id) }
-                    )
-                    FloatingActionButton(
-                        onClick = { openForm(null) },
-                        modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
-                    ) { Text("＋", style = MaterialTheme.typography.titleLarge) }
-                }
-                is Screen.Search -> Column(Modifier.fillMaxSize()) {
-                    OutlinedTextField(
-                        value = searchQuery,
-                        onValueChange = { searchQuery = it },
-                        label = { Text("Wpisz szukaną frazę...") },
-                        modifier = Modifier.fillMaxWidth().padding(16.dp)
-                    )
-                    val wyniki = incydenty.filter {
-                        searchQuery.isNotBlank() &&
-                            (it.tytul.contains(searchQuery, true) || it.lokalizacja.contains(searchQuery, true) || it.opis.contains(searchQuery, true))
+            Column(Modifier.fillMaxSize()) {
+                NaglowekEkranu(selectedScreen.title, ciemny) { ciemny = it }
+                Box(Modifier.weight(1f).fillMaxWidth()) {
+                    when (selectedScreen) {
+                        is Screen.Home -> {
+                            IncydentList(
+                                incydenty, "Brak zgłoszeń. Dodaj pierwsze przyciskiem +",
+                                onEdit, { vm.usun(it.id) }, { vm.przelaczUlubiony(it.id) }
+                            )
+                            FloatingActionButton(
+                                onClick = { openForm(null) },
+                                containerColor = MaterialTheme.colorScheme.tertiary,
+                                contentColor = MaterialTheme.colorScheme.onTertiary,
+                                modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
+                            ) { Icon(Icons.Filled.Add, contentDescription = "Dodaj zgłoszenie") }
+                        }
+                        is Screen.Search -> Column(Modifier.fillMaxSize()) {
+                            OutlinedTextField(
+                                value = searchQuery,
+                                onValueChange = { searchQuery = it },
+                                label = { Text("Wpisz szukaną frazę...") },
+                                leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)
+                            )
+                            val wyniki = incydenty.filter {
+                                searchQuery.isNotBlank() &&
+                                    (it.tytul.contains(searchQuery, true) || it.lokalizacja.contains(searchQuery, true) || it.opis.contains(searchQuery, true))
+                            }
+                            IncydentList(
+                                wyniki, if (searchQuery.isBlank()) "Wpisz frazę, aby wyszukać" else "Brak wyników dla: \"$searchQuery\"",
+                                onEdit, { vm.usun(it.id) }, { vm.przelaczUlubiony(it.id) },
+                                pustaIkona = Icons.Filled.Search
+                            )
+                        }
+                        is Screen.Favorites -> IncydentList(
+                            incydenty.filter { it.ulubiony }, "Brak ulubionych elementów",
+                            onEdit, { vm.usun(it.id) }, { vm.przelaczUlubiony(it.id) },
+                            pustaIkona = Icons.Filled.Star
+                        )
+                        else -> ScreenContent(
+                            screen = selectedScreen,
+                            searchQuery = searchQuery,
+                            onSearchQueryChanged = { searchQuery = it },
+                            profileName = profileName,
+                            onProfileNameChanged = { profileName = it },
+                            profileEmail = profileEmail,
+                            onProfileEmailChanged = { profileEmail = it },
+                            notificationsEnabled = notificationsEnabled,
+                            onNotificationsToggled = { notificationsEnabled = it }
+                        )
                     }
-                    IncydentList(
-                        wyniki, if (searchQuery.isBlank()) "Wpisz frazę, aby wyszukać" else "Brak wyników dla: \"$searchQuery\"",
-                        onEdit, { vm.usun(it.id) }, { vm.przelaczUlubiony(it.id) }
-                    )
-                }
-                is Screen.Favorites -> IncydentList(
-                    incydenty.filter { it.ulubiony }, "Brak ulubionych elementów",
-                    onEdit, { vm.usun(it.id) }, { vm.przelaczUlubiony(it.id) }
-                )
-                else -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    ScreenContent(
-                        screen = selectedScreen,
-                        searchQuery = searchQuery,
-                        onSearchQueryChanged = { searchQuery = it },
-                        profileName = profileName,
-                        onProfileNameChanged = { profileName = it },
-                        profileEmail = profileEmail,
-                        onProfileEmailChanged = { profileEmail = it },
-                        notificationsEnabled = notificationsEnabled,
-                        onNotificationsToggled = { notificationsEnabled = it }
-                    )
                 }
             }
         }
@@ -153,8 +180,8 @@ fun App() {
                         Spacer(modifier = Modifier.weight(1f))
                         items.forEach { screen ->
                             NavigationRailItem(
-                                icon = { Text(screen.icon, style = MaterialTheme.typography.titleMedium) },
-                                label = { Text(screen.title) },
+                                icon = { Icon(screen.icon, contentDescription = null) },
+                                label = { EtykietaNawigacji(screen.title) },
                                 selected = selectedScreen == screen,
                                 onClick = { selectTab(screen.route) }
                             )
@@ -171,8 +198,8 @@ fun App() {
                         NavigationBar {
                             items.forEach { screen ->
                                 NavigationBarItem(
-                                    icon = { Text(screen.icon, style = MaterialTheme.typography.titleMedium) },
-                                    label = { Text(screen.title) },
+                                    icon = { Icon(screen.icon, contentDescription = null) },
+                                    label = { EtykietaNawigacji(screen.title) },
                                     selected = selectedScreen == screen,
                                     onClick = { selectTab(screen.route) }
                                 )
@@ -185,6 +212,37 @@ fun App() {
                     }
                 }
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun NaglowekEkranu(tytul: String, ciemny: Boolean, onZmianaMotywu: (Boolean) -> Unit) {
+    TopAppBar(
+        title = { Text(tytul, fontWeight = FontWeight.Bold) },
+        actions = { PrzelacznikMotywu(ciemny, onZmianaMotywu) },
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
+    )
+}
+
+@Composable
+private fun EtykietaNawigacji(tekst: String) {
+    Text(
+        tekst,
+        maxLines = 1,
+        softWrap = false,
+        overflow = TextOverflow.Ellipsis,
+        style = MaterialTheme.typography.labelSmall
+    )
+}
+
+@Composable
+private fun SekcjaKarta(tytul: String, content: @Composable ColumnScope.() -> Unit) {
+    ElevatedCard(Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(tytul, style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
+            content()
         }
     }
 }
@@ -204,63 +262,132 @@ fun ScreenContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(text = "Aktualny ekran: ${screen.title}", style = MaterialTheme.typography.headlineMedium)
-        Spacer(modifier = Modifier.height(24.dp))
-
         when (screen) {
             is Screen.Home -> {
-                Text("Witaj w aplikacji! Cykl życia i stan są w pełni monitorowane.")
+                SekcjaKarta("Witaj") {
+                    Text("Witaj w aplikacji! Cykl życia i stan są w pełni monitorowane.")
+                }
             }
             is Screen.Search -> {
-                OutlinedTextField(
-                    value = searchQuery,
-                    onValueChange = onSearchQueryChanged,
-                    label = { Text("Wpisz szukaną frazu...") },
-                    modifier = Modifier.fillMaxWidth(0.8f)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text("Wyniki dla: \"$searchQuery\"")
+                SekcjaKarta("Szukaj") {
+                    OutlinedTextField(
+                        value = searchQuery,
+                        onValueChange = onSearchQueryChanged,
+                        label = { Text("Wpisz szukaną frazu...") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Text("Wyniki dla: \"$searchQuery\"", style = MaterialTheme.typography.bodyMedium)
+                }
             }
             is Screen.Notifications -> {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth(0.8f)
-                ) {
-                    Text("Otrzymuj powiadomienia")
-                    Switch(
-                        checked = notificationsEnabled,
-                        onCheckedChange = onNotificationsToggled
+                SekcjaKarta("Powiadomienia") {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Otrzymuj powiadomienia", Modifier.weight(1f))
+                        Switch(
+                            checked = notificationsEnabled,
+                            onCheckedChange = onNotificationsToggled
+                        )
+                    }
+                    Text(
+                        if (notificationsEnabled) "Powiadomienia włączone" else "Powiadomienia wyłączone",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(if (notificationsEnabled) "Powiadomienia włączone" else "Powiadomienia wyłączone")
             }
             is Screen.Favorites -> {
-                Text("Twoje ulubione elementy są zachowane.")
+                SekcjaKarta("Ulubione") {
+                    Text("Twoje ulubione elementy są zachowane.")
+                }
             }
             is Screen.Profile -> {
-                OutlinedTextField(
-                    value = profileName,
-                    onValueChange = onProfileNameChanged,
-                    label = { Text("Imię i nazwisko (Formularz)") },
-                    modifier = Modifier.fillMaxWidth(0.8f)
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                OutlinedTextField(
-                    value = profileEmail,
-                    onValueChange = onProfileEmailChanged,
-                    label = { Text("Adres E-mail") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                    modifier = Modifier.fillMaxWidth(0.8f)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text("Wprowadzono: $profileName ($profileEmail)")
+                SekcjaKarta("Dane osobowe") {
+                    OutlinedTextField(
+                        value = profileName,
+                        onValueChange = onProfileNameChanged,
+                        label = { Text("Imię i nazwisko (Formularz)") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = profileEmail,
+                        onValueChange = onProfileEmailChanged,
+                        label = { Text("Adres E-mail") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                SekcjaKarta("Podsumowanie") {
+                    Text("Wprowadzono: $profileName ($profileEmail)")
+                }
             }
         }
+    }
+}
+
+/** Przełącznik motywu: słońce – suwak – księżyc. */
+@Composable
+private fun PrzelacznikMotywu(ciemny: Boolean, onZmiana: (Boolean) -> Unit) {
+    val aktywny = MaterialTheme.colorScheme.tertiary
+    val nieaktywny = MaterialTheme.colorScheme.onSurfaceVariant
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = Modifier.padding(end = 12.dp)
+    ) {
+        IkonaSlonca(if (ciemny) nieaktywny else aktywny)
+        Switch(
+            checked = ciemny,
+            onCheckedChange = onZmiana,
+            modifier = Modifier.semantics { contentDescription = "Motyw ciemny" }
+        )
+        IkonaKsiezyca(if (ciemny) aktywny else nieaktywny)
+    }
+}
+
+@Composable
+private fun IkonaSlonca(kolor: androidx.compose.ui.graphics.Color) {
+    androidx.compose.foundation.Canvas(Modifier.size(20.dp)) {
+        val c = center
+        val r = size.minDimension * 0.22f
+        drawCircle(kolor, r, c)
+        for (i in 0 until 8) {
+            val a = i * kotlin.math.PI / 4
+            val dx = kotlin.math.cos(a).toFloat()
+            val dy = kotlin.math.sin(a).toFloat()
+            drawLine(
+                kolor,
+                androidx.compose.ui.geometry.Offset(c.x + dx * r * 1.6f, c.y + dy * r * 1.6f),
+                androidx.compose.ui.geometry.Offset(c.x + dx * r * 2.2f, c.y + dy * r * 2.2f),
+                strokeWidth = 2.dp.toPx(),
+                cap = androidx.compose.ui.graphics.StrokeCap.Round
+            )
+        }
+    }
+}
+
+@Composable
+private fun IkonaKsiezyca(kolor: androidx.compose.ui.graphics.Color) {
+    androidx.compose.foundation.Canvas(Modifier.size(20.dp)) {
+        val r = size.minDimension * 0.42f
+        val sierp = androidx.compose.ui.graphics.Path().apply {
+            op(
+                androidx.compose.ui.graphics.Path().apply {
+                    addOval(androidx.compose.ui.geometry.Rect(center, r))
+                },
+                androidx.compose.ui.graphics.Path().apply {
+                    addOval(androidx.compose.ui.geometry.Rect(center + androidx.compose.ui.geometry.Offset(r * 0.55f, -r * 0.35f), r * 0.85f))
+                },
+                androidx.compose.ui.graphics.PathOperation.Difference
+            )
+        }
+        drawPath(sierp, kolor)
     }
 }

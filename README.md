@@ -36,8 +36,20 @@ W ramach drugiego etapu projektu (zgodnie z wymaganiami Laboratorium 3) zaimplem
    - **UI** – `App.kt`, `ui/IncydentScreens.kt` (lista, formularz; Compose, bez logiki biznesowej),
    - **ViewModel** – `viewmodel/IncydentViewModel.kt` (logika prezentacji, walidacja, stan jako `StateFlow`),
    - **Repozytorium / dane** – `data/IncydentRepository.kt` (interfejs + `InMemoryIncydentRepository`), model `data/Incydent.kt`.
-2. **Nawigacja**: dolny pasek / boczny `NavigationRail` między 5 zakładkami oraz ekran formularza (dodawanie/edycja) z przyciskiem „Wróć”; stan nawigacji zachowywany przy obrocie.
+2. **Nawigacja**: dolny pasek / boczny `NavigationRail` między 5 zakładkami oraz ekran formularza (dodawanie/edycja) ze strzałką wstecz w nagłówku; stan nawigacji zachowywany przy obrocie.
 3. **CRUD** na liście zgłoszeń (zakładka Start): dodawanie (przycisk ＋), edycja, usuwanie z potwierdzeniem, oznaczanie jako ulubione (lista w zakładce Ulubione), wyszukiwanie w zakładce Szukaj.
+
+---
+
+## Etap 4 - Warstwa wizualna (bez zmian w działaniu)
+
+1. **Własny motyw** (`ui/theme/Theme.kt`): stonowany granat z pomarańczowym akcentem, wersja jasna i ciemna, własne zaokrąglenia (`Shapes`) i typografia (`Typography`).
+2. **Przełącznik motywu jasny/ciemny** w nagłówku każdej zakładki (słońce – suwak – księżyc); domyślnie zgodny z ustawieniem systemu, wybór zachowywany przy obrocie ekranu (`rememberSaveable`).
+3. **Ikony Material zamiast emoji** (zależność `material-icons-core`) w nawigacji, na kartach i w formularzu.
+4. **Karta zgłoszenia**: pogrubiony tytuł, plakietka priorytetu (czerwona / żółta / zielona), lokalizacja z ikoną pinezki, opis do 2 linii, akcje (ulubione, edycja, usuwanie) jako ikony.
+5. **Nagłówki ekranów** (`TopAppBar`), zakładka „Start” przemianowana na „Zgłoszenia”; formularz z nagłówkiem i strzałką wstecz, przyciski Zapisz/Anuluj na całą szerokość; chipy priorytetu w kolorach plakietek.
+6. **Stany puste** (ikona + tekst) oraz ekrany Alerty i Profil ułożone w karty.
+7. Logika, ViewModel, repozytorium i nawigacja pozostały bez zmian.
 
 ---
 
