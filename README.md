@@ -49,7 +49,7 @@ W ramach drugiego etapu projektu (zgodnie z wymaganiami Laboratorium 3) zaimplem
 4. **Karta zgłoszenia**: pogrubiony tytuł, plakietka priorytetu (czerwona / żółta / zielona), lokalizacja z ikoną pinezki, opis do 2 linii, akcje (ulubione, edycja, usuwanie) jako ikony.
 5. **Nagłówki ekranów** (`TopAppBar`), zakładka „Start” przemianowana na „Zgłoszenia”; formularz z nagłówkiem i strzałką wstecz, przyciski Zapisz/Anuluj na całą szerokość; chipy priorytetu w kolorach plakietek.
 6. **Stany puste** (ikona + tekst) oraz ekrany Alerty i Profil ułożone w karty.
-7. **Obsługa klawiatury w formularzu** (`imePadding`, przewijana treść, akcje IME Next/Done, chowanie klawiatury po dotknięciu tła), chipy priorytetu w układzie zawijanym (`FlowRow`), w poziomie przycisk „+” obok listy zamiast nad kartami, ciemne warianty plakietek priorytetu, jednoliniowe pola profilu i czytelne podsumowanie przy pustych danych.
+7. **Obsługa klawiatury w formularzu** (`imePadding`, przewijana treść, akcje IME Next/Done, chowanie klawiatury po dotknięciu tła), chipy priorytetu w układzie zawijanym (`FlowRow`), w poziomie przycisk „+” obok listy zamiast nad kartami, ciemne warianty plakietek priorytetu, jednoliniowe pola profilu i czytelne podsumowanie przy pustych danych; w wyszukiwarce i na Profilu klawiaturę chowa klawisz Search/Done oraz dotknięcie tła (naprawa błędu na iOS, gdzie klawiatura zasłaniała dolną nawigację).
 8. Logika, ViewModel, repozytorium i nawigacja pozostały bez zmian.
 
 ---

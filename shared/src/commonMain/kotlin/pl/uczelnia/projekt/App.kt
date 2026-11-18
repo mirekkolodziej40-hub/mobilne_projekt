@@ -1,7 +1,12 @@
 package pl.uczelnia.projekt
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -99,8 +104,9 @@ fun App() {
 
         val incydenty by vm.incydenty.collectAsState()
 
+        val focusManager = LocalFocusManager.current
         fun openForm(id: Long?) { editedId = id; formOpen = true }
-        fun selectTab(route: String) { selectedRoute = route; formOpen = false }
+        fun selectTab(route: String) { focusManager.clearFocus(); selectedRoute = route; formOpen = false }
 
         val onEdit: (pl.uczelnia.projekt.data.Incydent) -> Unit = { openForm(it.id) }
 
@@ -140,10 +146,16 @@ fun App() {
                                 }
                             }
                         }
-                        is Screen.Search -> Column(Modifier.fillMaxSize()) {
+                        is Screen.Search -> Column(
+                            Modifier.fillMaxSize()
+                                .pointerInput(Unit) { detectTapGestures(onTap = { focusManager.clearFocus() }) }
+                        ) {
                             OutlinedTextField(
                                 value = searchQuery,
                                 onValueChange = { searchQuery = it },
+                                singleLine = true,
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                                keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
                                 label = { Text("Wpisz szukaną frazę...") },
                                 leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
                                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)
@@ -278,9 +290,11 @@ fun ScreenContent(
     notificationsEnabled: Boolean,
     onNotificationsToggled: (Boolean) -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .pointerInput(Unit) { detectTapGestures(onTap = { focusManager.clearFocus() }) }
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -333,6 +347,7 @@ fun ScreenContent(
                         value = profileName,
                         onValueChange = onProfileNameChanged,
                         singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         label = { Text("Imię i nazwisko (Formularz)") },
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -341,7 +356,8 @@ fun ScreenContent(
                         onValueChange = onProfileEmailChanged,
                         singleLine = true,
                         label = { Text("Adres E-mail") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
