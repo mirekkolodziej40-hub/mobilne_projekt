@@ -1,5 +1,6 @@
 package pl.uczelnia.projekt
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.text.KeyboardActions
@@ -86,6 +87,7 @@ fun App() {
     var ciemny by rememberSaveable { mutableStateOf(systemDark) }
 
     ProjektTheme(darkTheme = ciemny) {
+        PaskiSystemowe(ciemny)
         val items = listOf(Screen.Home, Screen.Search, Screen.Notifications, Screen.Favorites, Screen.Profile)
 
         // ViewModel (warstwa prezentacji) -> repozytorium (warstwa danych)
@@ -202,7 +204,7 @@ fun App() {
             }
         }
 
-        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        BoxWithConstraints(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
             val isWideScreen = maxWidth >= 600.dp
 
             if (isWideScreen) {
