@@ -1,6 +1,9 @@
 package pl.uczelnia.projekt
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.vector.ImageVector
 
 @Immutable
 data class EwakuacjaItem(
@@ -10,12 +13,12 @@ data class EwakuacjaItem(
     val status: String
 )
 
-sealed class Screen(val route: String, val title: String, val icon: String) {
-    object Home : Screen("home", "Start", "🏠")
-    object Search : Screen("search", "Szukaj", "🔍")
-    object Notifications : Screen("notifications", "Ustawienia", "⚙️")
-    object Favorites : Screen("favorites", "Statystyki", "📊")
-    object Profile : Screen("profile", "Formularz", "📝")
+sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
+    object Home : Screen("home", "Start", Icons.Default.Home)
+    object Search : Screen("search", "Szukaj", Icons.Default.Search)
+    object Notifications : Screen("notifications", "Powiadomienia", Icons.Default.Notifications)
+    object Favorites : Screen("favorites", "Ulubione", Icons.Default.Favorite)
+    object Profile : Screen("profile", "Profil", Icons.Default.Person)
 
     companion object {
         fun fromRoute(route: String): Screen = when (route) {

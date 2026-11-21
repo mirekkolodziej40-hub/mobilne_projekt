@@ -53,7 +53,7 @@ fun App() {
                         Spacer(modifier = Modifier.weight(1f))
                         items.forEach { screen ->
                             NavigationRailItem(
-                                icon = { Text(screen.icon, style = MaterialTheme.typography.titleMedium) },
+                                icon = { Icon(screen.icon, contentDescription = screen.title) },
                                 label = { Text(screen.title) },
                                 selected = selectedScreen == screen,
                                 onClick = { selectedRoute = screen.route }
@@ -107,7 +107,7 @@ fun App() {
                         NavigationBar {
                             items.forEach { screen ->
                                 NavigationBarItem(
-                                    icon = { Text(screen.icon, style = MaterialTheme.typography.titleMedium) },
+                                    icon = { Icon(screen.icon, contentDescription = screen.title) },
                                     label = { Text(screen.title) },
                                     selected = selectedScreen == screen,
                                     onClick = { selectedRoute = screen.route }
@@ -201,8 +201,8 @@ fun ScreenContentRouter(
         when (screen) {
             is Screen.Home -> EkranStartowy()
             is Screen.Search -> EkranSzukaj(searchQuery, onSearchQueryChanged, filterCategory, onFilterChanged)
-            is Screen.Notifications -> EkranUstawienia(settingNotifications, onSettingNotificationsChanged, settingDarkMode, onSettingDarkModeChanged, settingOfflineMode, onSettingOfflineModeChanged)
-            is Screen.Favorites -> EkranStatystyki()
+            is Screen.Notifications -> EkranPowiadomienia(settingNotifications, onSettingNotificationsChanged, settingDarkMode, onSettingDarkModeChanged, settingOfflineMode, onSettingOfflineModeChanged)
+            is Screen.Favorites -> EkranUlubione()
             is Screen.Profile -> EkranFormularz(formName, onFormNameChanged, formEmail, onFormEmailChanged, formCount, onFormCountChanged, formIsUrgent, onFormUrgentChanged, formSubmitted, formError, onSubmitForm)
         }
     }

@@ -46,7 +46,7 @@ fun EkranSzukaj(
 }
 
 @Composable
-fun EkranUstawienia(
+fun EkranPowiadomienia(
     settingNotifications: Boolean,
     onSettingNotificationsChanged: (Boolean) -> Unit,
     settingDarkMode: Boolean,
@@ -54,10 +54,10 @@ fun EkranUstawienia(
     settingOfflineMode: Boolean,
     onSettingOfflineModeChanged: (Boolean) -> Unit
 ) {
-    ObserwatorCyklu("Ekran_Ustawienia")
+    ObserwatorCyklu("Ekran_Powiadomienia")
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text("Ustawienia Aplikacji", style = MaterialTheme.typography.titleLarge)
+            Text("Powiadomienia i Ustawienia", style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(12.dp))
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Text("Powiadomienia alarmowe")
@@ -76,11 +76,11 @@ fun EkranUstawienia(
 }
 
 @Composable
-fun EkranStatystyki() {
-    ObserwatorCyklu("Ekran_Statystyki")
+fun EkranUlubione() {
+    ObserwatorCyklu("Ekran_Ulubione")
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text("Statystyki Ewakuacji", style = MaterialTheme.typography.titleLarge)
+            Text("Ulubione i Statystyki", style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(12.dp))
             Text("• Aktywne budynki w systemie: 12")
             Text("• Punkty zbiórki: 5")
@@ -96,7 +96,7 @@ fun EkranStatystyki() {
 }
 
 @Composable
-fun EkranFormularz(
+fun EkranProfil(
     formName: String,
     onFormNameChanged: (String) -> Unit,
     formEmail: String,
@@ -109,10 +109,10 @@ fun EkranFormularz(
     formError: Boolean,
     onSubmitForm: () -> Unit
 ) {
-    ObserwatorCyklu("Ekran_Formularz")
+    ObserwatorCyklu("Ekran_Profil")
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text("Formularz Zgłoszenia / Statusu", style = MaterialTheme.typography.titleLarge)
+            Text("Profil użytkownika i Formularz", style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextField(
@@ -156,7 +156,7 @@ fun EkranFormularz(
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = onSubmitForm, modifier = Modifier.fillMaxWidth()) {
-                Text("Zapisz zgłoszenie")
+                Text("Zapisz profil / zgłoszenie")
             }
 
             if (formSubmitted) {
