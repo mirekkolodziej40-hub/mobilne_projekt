@@ -1,6 +1,8 @@
 package pl.uczelnia.projekt
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -9,12 +11,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import pl.uczelnia.projekt.ui.theme.ProjektTheme
 
 @Composable
 fun App() {
     ObserwatorCyklu("AppRoot")
 
-    MaterialTheme {
+    val systemDark = isSystemInDarkTheme()
+    // Tryb ciemny z ekranu ustawień (domyślnie zgodny z systemem); zachowywany przy obrocie
+    var settingDarkMode by rememberSaveable { mutableStateOf(systemDark) }
+
+    ProjektTheme(darkTheme = settingDarkMode) {
+        PaskiSystemowe(settingDarkMode)
         val items = listOf(
             Screen.Home,
             Screen.Search,
@@ -41,10 +49,9 @@ fun App() {
 
         // Stan ustawień (Zadanie 2.9)
         var settingNotifications by rememberSaveable { mutableStateOf(true) }
-        var settingDarkMode by rememberSaveable { mutableStateOf(false) }
         var settingOfflineMode by rememberSaveable { mutableStateOf(true) }
 
-        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        BoxWithConstraints(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
             val isWideScreen = maxWidth >= 600.dp
 
             if (isWideScreen) {
@@ -203,7 +210,7 @@ fun ScreenContentRouter(
             is Screen.Search -> EkranSzukaj(searchQuery, onSearchQueryChanged, filterCategory, onFilterChanged)
             is Screen.Notifications -> EkranPowiadomienia(settingNotifications, onSettingNotificationsChanged, settingDarkMode, onSettingDarkModeChanged, settingOfflineMode, onSettingOfflineModeChanged)
             is Screen.Favorites -> EkranUlubione()
-            is Screen.Profile -> EkranFormularz(formName, onFormNameChanged, formEmail, onFormEmailChanged, formCount, onFormCountChanged, formIsUrgent, onFormUrgentChanged, formSubmitted, formError, onSubmitForm)
+            is Screen.Profile -> EkranProfil(formName, onFormNameChanged, formEmail, onFormEmailChanged, formCount, onFormCountChanged, formIsUrgent, onFormUrgentChanged, formSubmitted, formError, onSubmitForm)
         }
     }
 }

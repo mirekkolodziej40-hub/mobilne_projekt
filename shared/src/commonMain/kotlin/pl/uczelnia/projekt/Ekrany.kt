@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
@@ -78,19 +79,38 @@ fun EkranPowiadomienia(
 @Composable
 fun EkranUlubione() {
     ObserwatorCyklu("Ekran_Ulubione")
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text("Ulubione i Statystyki", style = MaterialTheme.typography.titleLarge)
-            Spacer(modifier = Modifier.height(12.dp))
-            Text("• Aktywne budynki w systemie: 12")
-            Text("• Punkty zbiórki: 5")
-            Text("• Bezpieczne schrony: 3")
-            Spacer(modifier = Modifier.height(12.dp))
-            Text("Stopień przygotowania kampusu:")
-            Spacer(modifier = Modifier.height(4.dp))
-            LinearProgressIndicator(progress = { 0.85f }, modifier = Modifier.fillMaxWidth())
-            Spacer(modifier = Modifier.height(4.dp))
-            Text("85% gotowości operacyjnej", style = MaterialTheme.typography.bodySmall)
+    // Wartości wyliczane z danych
+    val razem = przykladoweElementy.size
+    val poKategoriach = przykladoweElementy.groupingBy { it.kategoria }.eachCount()
+    val gotowe = przykladoweElementy.count { it.status == "Gotowy" }
+    val procent = if (razem == 0) 0f else gotowe.toFloat() / razem
+
+    Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Text("Statystyki", style = MaterialTheme.typography.titleLarge)
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            KartaStatystyki("Wszystkie", razem, Modifier.weight(1f))
+            poKategoriach.forEach { (kategoria, liczba) ->
+                KartaStatystyki(kategoria, liczba, Modifier.weight(1f))
+            }
+        }
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text("Gotowość operacyjna: $gotowe z $razem")
+                Spacer(modifier = Modifier.height(8.dp))
+                LinearProgressIndicator(progress = { procent }, modifier = Modifier.fillMaxWidth())
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("${(procent * 100).toInt()}% gotowych", style = MaterialTheme.typography.bodySmall)
+            }
+        }
+    }
+}
+
+@Composable
+private fun KartaStatystyki(nazwa: String, liczba: Int, modifier: Modifier = Modifier) {
+    Card(modifier = modifier) {
+        Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Text("$liczba", style = MaterialTheme.typography.headlineMedium)
+            Text(nazwa, style = MaterialTheme.typography.bodySmall)
         }
     }
 }
@@ -147,6 +167,22 @@ fun EkranProfil(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Lista rozwijana: typ zgłoszenia
+            var typ by rememberSaveable { mutableStateOf("Zagrożenie pożarowe") }
+            var rozwiniete by remember { mutableStateOf(false) }
+            Box(modifier = Modifier.fillMaxWidth()) {
+                OutlinedButton(onClick = { rozwiniete = true }, modifier = Modifier.fillMaxWidth()) {
+                    Text("Typ zgłoszenia: $typ", modifier = Modifier.weight(1f))
+                    Text("▾")
+                }
+                DropdownMenu(expanded = rozwiniete, onDismissRequest = { rozwiniete = false }) {
+                    listOf("Zagrożenie pożarowe", "Zagrożenie chemiczne", "Awaria zasilania", "Inne").forEach { opcja ->
+                        DropdownMenuItem(text = { Text(opcja) }, onClick = { typ = opcja; rozwiniete = false })
+                    }
+                }
+            }
             Spacer(modifier = Modifier.height(8.dp))
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
