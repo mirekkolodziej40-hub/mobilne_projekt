@@ -1,47 +1,69 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 640" width="1000" height="640"><defs><marker id="a" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#333"/></marker></defs><rect width="1000" height="640" fill="#fff"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 690" width="1000" height="690"><defs><marker id="a" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#333"/></marker></defs><rect width="1000" height="690" fill="#fff"/>
 <text x="20" y="28" font-family="Helvetica,Arial,sans-serif" font-size="16" text-anchor="start" font-weight="bold" fill="#222">Diagram warstw aplikacji (shared/commonMain)</text>
-<rect x="20" y="50" width="960" height="130" rx="10" fill="#e8eaf6" stroke="#333" stroke-width="1.5"/>
+<rect x="20" y="50" width="960" height="215" rx="10" fill="#e8eaf6" stroke="#333" stroke-width="1.5"/>
 <text x="36" y="72" font-family="Helvetica,Arial,sans-serif" font-size="13" text-anchor="start" font-weight="bold" fill="#222">WARSTWA UI (Compose)</text>
-<rect x="36.0" y="84" width="296.0" height="84" rx="6" fill="#fff" stroke="#333" stroke-width="1.5"/>
-<text x="184.0" y="108" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">App.kt</text>
-<text x="184.0" y="126" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">App(), ScreenContentRouter()</text>
-<text x="184.0" y="141" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">NavigationBar / NavigationRail</text>
-<text x="184.0" y="156" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">stan: rememberSaveable</text>
-<rect x="348.0" y="84" width="296.0" height="84" rx="6" fill="#fff" stroke="#333" stroke-width="1.5"/>
-<text x="496.0" y="108" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">Ekrany.kt</text>
-<text x="496.0" y="126" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">EkranStartowy, EkranSzukaj,</text>
-<text x="496.0" y="141" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">EkranPowiadomienia, EkranUlubione,</text>
-<text x="496.0" y="156" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">EkranProfil (formularz)</text>
-<rect x="660.0" y="84" width="296.0" height="84" rx="6" fill="#fff" stroke="#333" stroke-width="1.5"/>
-<text x="808.0" y="108" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">Komponenty.kt</text>
-<text x="808.0" y="126" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">ObserwatorCyklu()</text>
-<text x="808.0" y="141" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">(zdarzenia cyklu życia)</text>
-<rect x="20" y="250" width="960" height="110" rx="10" fill="#e0f2f1" stroke="#333" stroke-width="1.5"/>
-<text x="36" y="272" font-family="Helvetica,Arial,sans-serif" font-size="13" text-anchor="start" font-weight="bold" fill="#222">WARSTWA MODELU / STANU UI</text>
-<rect x="36.0" y="284" width="452.0" height="64" rx="6" fill="#fff" stroke="#333" stroke-width="1.5"/>
-<text x="262.0" y="308" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">Model.kt</text>
-<text x="262.0" y="326" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">Screen (Home, Search, Notifications,</text>
-<text x="262.0" y="341" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">Favorites, Profile) + fromRoute()</text>
-<rect x="504.0" y="284" width="452.0" height="64" rx="6" fill="#fff" stroke="#333" stroke-width="1.5"/>
-<text x="730.0" y="308" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">Model.kt</text>
-<text x="730.0" y="326" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">EwakuacjaItem(id, nazwa,</text>
-<text x="730.0" y="341" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">kategoria, status)</text>
-<rect x="20" y="430" width="960" height="170" rx="10" fill="#fff3e0" stroke="#333" stroke-width="1.5" stroke-dasharray="5 4"/>
-<text x="36" y="452" font-family="Helvetica,Arial,sans-serif" font-size="13" text-anchor="start" font-weight="bold" fill="#222">WARSTWA LOGIKI I DANYCH (w repozytorium, nie podpięta do App())</text>
-<rect x="36.0" y="464" width="296.0" height="124" rx="6" fill="#fff" stroke="#333" stroke-width="1.5" stroke-dasharray="5 4"/>
-<text x="184.0" y="488" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">IncydentViewModel</text>
-<text x="184.0" y="506" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">viewmodel/ – StateFlow,</text>
-<text x="184.0" y="521" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">walidacja</text>
-<rect x="348.0" y="464" width="296.0" height="124" rx="6" fill="#fff" stroke="#333" stroke-width="1.5" stroke-dasharray="5 4"/>
-<text x="496.0" y="488" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">IncydentRepository</text>
-<text x="496.0" y="506" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">data/ – interfejs +</text>
-<text x="496.0" y="521" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">InMemoryIncydentRepository</text>
-<rect x="660.0" y="464" width="296.0" height="124" rx="6" fill="#fff" stroke="#333" stroke-width="1.5" stroke-dasharray="5 4"/>
-<text x="808.0" y="488" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">Incydent</text>
-<text x="808.0" y="506" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">data/ – model danych</text>
-<line x1="300" y1="250" x2="300" y2="180" stroke="#333" stroke-width="2" marker-end="url(#a)"/><text x="310" y="205" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#b3470f">stan (parametry value)</text><text x="310" y="222" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#b3470f">wybrana Screen, pola formularza</text>
-<line x1="640" y1="180" x2="640" y2="250" stroke="#333" stroke-width="2" marker-end="url(#a)"/><text x="650" y="205" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#b3470f">zdarzenia: onClick,</text><text x="650" y="222" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#b3470f">onValueChange, onCheckedChange</text>
-<line x1="300" y1="430" x2="300" y2="360" stroke="#333" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#a)"/><text x="310" y="395" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#b3470f">docelowo: StateFlow → UI</text>
-<line x1="640" y1="360" x2="640" y2="430" stroke="#333" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#a)"/><text x="650" y="395" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#b3470f">docelowo: zdarzenia → ViewModel</text>
-<text x="20" y="625" font-family="Helvetica,Arial,sans-serif" font-size="11" text-anchor="start" font-weight="normal" fill="#222">Linia ciągła – przepływ zrealizowany w kodzie; przerywana – warstwa obecna w repozytorium, niepodłączona do App().</text>
+<rect x="36" y="86" width="250" height="164" rx="6" fill="#fff" stroke="#333" stroke-width="1.5"/>
+<text x="161.0" y="108" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">App.kt</text>
+<text x="161.0" y="126" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">App(), ScreenContentRouter()</text>
+<text x="161.0" y="141" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">NavigationBar / NavigationRail</text>
+<text x="161.0" y="156" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222"></text>
+<text x="161.0" y="171" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">STAN: rememberSaveable</text>
+<text x="161.0" y="186" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">(zakładka, formularz, ustawienia,</text>
+<text x="161.0" y="201" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">typ zgłoszenia, tryb ciemny)</text>
+<rect x="386" y="86" width="250" height="164" rx="6" fill="#fff" stroke="#333" stroke-width="1.5"/>
+<text x="511.0" y="108" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">Ekrany.kt</text>
+<text x="511.0" y="126" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">EkranStartowy, EkranSzukaj,</text>
+<text x="511.0" y="141" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">EkranPowiadomienia,</text>
+<text x="511.0" y="156" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">EkranUlubione (statystyki),</text>
+<text x="511.0" y="171" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">EkranProfil (formularz)</text>
+<rect x="700" y="86" width="264" height="50" rx="6" fill="#fff" stroke="#333" stroke-width="1.5"/>
+<text x="832" y="106" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">Komponenty.kt</text>
+<text x="832" y="124" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">ObserwatorCyklu() – cykl życia</text>
+<rect x="700" y="144" width="264" height="50" rx="6" fill="#fff" stroke="#333" stroke-width="1.5"/>
+<text x="832" y="164" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">ui/theme/Theme.kt</text>
+<text x="832" y="182" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">ProjektTheme (jasny/ciemny motyw)</text>
+<rect x="700" y="202" width="264" height="48" rx="6" fill="#fff" stroke="#333" stroke-width="1.5"/>
+<text x="832" y="222" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">PaskiSystemowe (expect/actual)</text>
+<text x="832" y="240" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">ikony pasków: Android / iOS</text>
+<line x1="286" y1="126" x2="386" y2="126" stroke="#333" stroke-width="2" marker-end="url(#a)"/>
+<text x="336" y="118" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#b3470f">stan</text>
+<line x1="386" y1="206" x2="286" y2="206" stroke="#333" stroke-width="2" marker-end="url(#a)"/>
+<text x="336" y="198" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#b3470f">zdarzenia</text>
+<line x1="636" y1="111" x2="700" y2="111" stroke="#333" stroke-width="2" marker-end="url(#a)"/>
+<text x="668" y="104" font-family="Helvetica,Arial,sans-serif" font-size="9" text-anchor="middle" font-weight="normal" fill="#b3470f">wywołuje</text>
+<text x="700" y="276" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#b3470f">App() stosuje ProjektTheme i PaskiSystemowe wokół całej zawartości.</text>
+<rect x="20" y="300" width="960" height="130" rx="10" fill="#e0f2f1" stroke="#333" stroke-width="1.5"/>
+<text x="36" y="322" font-family="Helvetica,Arial,sans-serif" font-size="13" text-anchor="start" font-weight="bold" fill="#222">WARSTWA MODELU / DANYCH UI (Model.kt)</text>
+<rect x="36" y="336" width="280" height="82" rx="6" fill="#fff" stroke="#333" stroke-width="1.5"/>
+<text x="176.0" y="358" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">Screen</text>
+<text x="176.0" y="376" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">Home, Search, Notifications,</text>
+<text x="176.0" y="391" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">Favorites, Profile; etykieta, fromRoute()</text>
+<rect x="336" y="336" width="300" height="82" rx="6" fill="#fff" stroke="#333" stroke-width="1.5"/>
+<text x="486.0" y="358" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">EwakuacjaItem</text>
+<text x="486.0" y="376" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">id, nazwa, kategoria, status</text>
+<rect x="656" y="336" width="308" height="82" rx="6" fill="#fff" stroke="#333" stroke-width="1.5"/>
+<text x="810.0" y="358" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">przykladoweElementy</text>
+<text x="810.0" y="376" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">List&lt;EwakuacjaItem&gt; (20 elementów)</text>
+<text x="810.0" y="391" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">źródło statystyk</text>
+<line x1="160" y1="336" x2="160" y2="250" stroke="#333" stroke-width="2" marker-end="url(#a)"/>
+<text x="168" y="300" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#b3470f">wybór ekranu (Screen)</text>
+<line x1="800" y1="336" x2="540" y2="250" stroke="#333" stroke-width="2" marker-end="url(#a)"/>
+<text x="640" y="312" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#b3470f">dane → statystyki (EkranUlubione)</text>
+<rect x="20" y="490" width="960" height="130" rx="10" fill="#fff3e0" stroke="#333" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="36" y="512" font-family="Helvetica,Arial,sans-serif" font-size="13" text-anchor="start" font-weight="bold" fill="#222">WARSTWA LOGIKI I DANYCH (w repozytorium, niepodłączona do App())</text>
+<rect x="36" y="526" width="280" height="82" rx="6" fill="#fff" stroke="#333" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="176.0" y="548" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">IncydentViewModel</text>
+<text x="176.0" y="566" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">viewmodel/ – StateFlow, walidacja</text>
+<rect x="336" y="526" width="300" height="82" rx="6" fill="#fff" stroke="#333" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="486.0" y="548" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">IncydentRepository</text>
+<text x="486.0" y="566" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">data/ – interfejs + InMemoryIncydentRepository</text>
+<rect x="656" y="526" width="308" height="82" rx="6" fill="#fff" stroke="#333" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="810.0" y="548" font-family="Helvetica,Arial,sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#222">Incydent</text>
+<text x="810.0" y="566" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="middle" font-weight="normal" fill="#222">data/ – model zgłoszenia (CRUD)</text>
+<line x1="120" y1="490" x2="120" y2="430" stroke="#333" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#a)"/>
+<text x="130" y="466" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#b3470f">docelowo: StateFlow → UI</text>
+<line x1="440" y1="430" x2="440" y2="490" stroke="#333" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#a)"/>
+<text x="450" y="466" font-family="Helvetica,Arial,sans-serif" font-size="10" text-anchor="start" font-weight="normal" fill="#b3470f">docelowo: zdarzenia → ViewModel</text>
+<text x="20" y="650" font-family="Helvetica,Arial,sans-serif" font-size="11" text-anchor="start" font-weight="normal" fill="#222">Linia ciągła – przepływ zrealizowany w kodzie: stan płynie w dół (App → ekrany), zdarzenia w górę (callbacki), dane z Model.kt do UI.</text>
+<text x="20" y="670" font-family="Helvetica,Arial,sans-serif" font-size="11" text-anchor="start" font-weight="normal" fill="#222">Linia przerywana – warstwa obecna w repozytorium, niepodłączona obecnie do App().</text>
 </svg>

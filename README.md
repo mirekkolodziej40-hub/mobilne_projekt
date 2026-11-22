@@ -97,11 +97,11 @@ W ramach drugiego etapu projektu (zgodnie z wymaganiami Laboratorium 3) zaimplem
 2. **Nawigacja**: dolny pasek / boczny `NavigationRail` między 5 zakładkami oraz ekran formularza (dodawanie/edycja) ze strzałką wstecz w nagłówku; stan nawigacji zachowywany przy obrocie.
 3. **CRUD** na liście zgłoszeń (zakładka Start): dodawanie (przycisk ＋), edycja, usuwanie z potwierdzeniem, oznaczanie jako ulubione (lista w zakładce Ulubione), wyszukiwanie w zakładce Szukaj.
 
-4. **Diagram warstw aplikacji** (katalog [`docs/`](./docs)): nazwy klas każdej warstwy (UI – `App`, `ScreenContentRouter`, ekrany z `Ekrany.kt`, `ObserwatorCyklu`; model/stan – `Screen`, `EwakuacjaItem`; logika i dane – `IncydentViewModel`, `IncydentRepository`, `Incydent`) oraz strzałki kierunku przepływu: stan płynie w górę do interfejsu, zdarzenia użytkownika – w dół.
+4. **Diagram warstw aplikacji** (katalog [`docs/`](./docs)): nazwy klas każdej warstwy (UI – `App`, `ScreenContentRouter`, ekrany z `Ekrany.kt`, `ObserwatorCyklu`, `ProjektTheme`, `PaskiSystemowe`; model i dane UI – `Screen`, `EwakuacjaItem`, `przykladoweElementy`; logika i dane – `IncydentViewModel`, `IncydentRepository`, `Incydent`) oraz strzałki kierunku przepływu: stan (przechowywany w `App()` przez `rememberSaveable`) płynie w dół do ekranów jako parametry, zdarzenia użytkownika wracają w górę przez callbacki, a dane do statystyk płyną z `Model.kt` do ekranu Ulubione.
 
    ![Diagram warstw](docs/diagram-warstw.svg)
 
-   *Rys. 2. Diagram warstw aplikacji: stan przepływa od warstwy danych i modelu do UI, a zdarzenia (kliknięcia, zmiany pól) od UI do warstwy niżej. Linia przerywana oznacza warstwę logiki i danych obecną w repozytorium, ale niepodłączoną obecnie do `App()`.*
+   *Rys. 2. Diagram warstw aplikacji: stan przepływa z `App()` do ekranów, zdarzenia (kliknięcia, zmiany pól) wracają do `App()`, a dane z modelu zasilają statystyki. Linia przerywana oznacza warstwę logiki i danych obecną w repozytorium, ale niepodłączoną obecnie do `App()`.*
 
 ---
 
