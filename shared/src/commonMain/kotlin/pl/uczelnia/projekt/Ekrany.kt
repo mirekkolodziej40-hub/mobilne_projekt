@@ -11,6 +11,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -94,10 +95,10 @@ fun EkranUlubione() {
 
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text("Statystyki", style = MaterialTheme.typography.titleLarge)
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            KartaStatystyki("Wszystkie", razem, Modifier.weight(1f))
+        Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            KartaStatystyki("Wszystkie", razem, Modifier.weight(1f).fillMaxHeight())
             poKategoriach.forEach { (kategoria, liczba) ->
-                KartaStatystyki(kategoria, liczba, Modifier.weight(1f))
+                KartaStatystyki(kategoria, liczba, Modifier.weight(1f).fillMaxHeight())
             }
         }
         ElevatedCard(modifier = Modifier.fillMaxWidth()) {
@@ -115,9 +116,9 @@ fun EkranUlubione() {
 @Composable
 private fun KartaStatystyki(nazwa: String, liczba: Int, modifier: Modifier = Modifier) {
     ElevatedCard(modifier = modifier) {
-        Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(modifier = Modifier.fillMaxSize().padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
             Text("$liczba", style = MaterialTheme.typography.headlineMedium)
-            Text(nazwa, style = MaterialTheme.typography.bodySmall)
+            Text(nazwa, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
         }
     }
 }
@@ -130,6 +131,8 @@ fun EkranProfil(
     onFormEmailChanged: (String) -> Unit,
     formCount: String,
     onFormCountChanged: (String) -> Unit,
+    formType: String,
+    onFormTypeChanged: (String) -> Unit,
     formIsUrgent: Boolean,
     onFormUrgentChanged: (Boolean) -> Unit,
     formSubmitted: Boolean,
@@ -183,16 +186,15 @@ fun EkranProfil(
             Spacer(modifier = Modifier.height(8.dp))
 
             // Lista rozwijana: typ zgłoszenia
-            var typ by rememberSaveable { mutableStateOf("Zagrożenie pożarowe") }
             var rozwiniete by remember { mutableStateOf(false) }
             Box(modifier = Modifier.fillMaxWidth()) {
                 OutlinedButton(onClick = { rozwiniete = true }, modifier = Modifier.fillMaxWidth()) {
-                    Text("Typ zgłoszenia: $typ", modifier = Modifier.weight(1f))
+                    Text("Typ zgłoszenia: $formType", modifier = Modifier.weight(1f))
                     Text("▾")
                 }
                 DropdownMenu(expanded = rozwiniete, onDismissRequest = { rozwiniete = false }) {
                     listOf("Zagrożenie pożarowe", "Zagrożenie chemiczne", "Awaria zasilania", "Inne").forEach { opcja ->
-                        DropdownMenuItem(text = { Text(opcja) }, onClick = { typ = opcja; rozwiniete = false })
+                        DropdownMenuItem(text = { Text(opcja) }, onClick = { onFormTypeChanged(opcja); rozwiniete = false })
                     }
                 }
             }

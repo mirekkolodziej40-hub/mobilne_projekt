@@ -50,12 +50,13 @@ fun App() {
         var formIsUrgent by rememberSaveable { mutableStateOf(false) }
         var formSubmitted by rememberSaveable { mutableStateOf(false) }
         var formError by rememberSaveable { mutableStateOf(false) }
+        var formType by rememberSaveable { mutableStateOf("Zagrożenie pożarowe") }
 
         // Stan ustawień (Zadanie 2.9)
         var settingNotifications by rememberSaveable { mutableStateOf(true) }
         var settingOfflineMode by rememberSaveable { mutableStateOf(true) }
 
-        BoxWithConstraints(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+        BoxWithConstraints(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background).windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))) {
             val isWideScreen = maxWidth >= 600.dp
 
             if (isWideScreen) {
@@ -90,6 +91,8 @@ fun App() {
                             onFormEmailChanged = { formEmail = it; formError = false },
                             formCount = formCount,
                             onFormCountChanged = { formCount = it },
+                            formType = formType,
+                            onFormTypeChanged = { formType = it },
                             formIsUrgent = formIsUrgent,
                             onFormUrgentChanged = { formIsUrgent = it },
                             formSubmitted = formSubmitted,
@@ -145,6 +148,8 @@ fun App() {
                             onFormEmailChanged = { formEmail = it; formError = false },
                             formCount = formCount,
                             onFormCountChanged = { formCount = it },
+                            formType = formType,
+                            onFormTypeChanged = { formType = it },
                             formIsUrgent = formIsUrgent,
                             onFormUrgentChanged = { formIsUrgent = it },
                             formSubmitted = formSubmitted,
@@ -185,6 +190,8 @@ fun ScreenContentRouter(
     onFormEmailChanged: (String) -> Unit,
     formCount: String,
     onFormCountChanged: (String) -> Unit,
+    formType: String,
+    onFormTypeChanged: (String) -> Unit,
     formIsUrgent: Boolean,
     onFormUrgentChanged: (Boolean) -> Unit,
     formSubmitted: Boolean,
@@ -222,7 +229,7 @@ fun ScreenContentRouter(
             is Screen.Search -> EkranSzukaj(searchQuery, onSearchQueryChanged, filterCategory, onFilterChanged)
             is Screen.Notifications -> EkranPowiadomienia(settingNotifications, onSettingNotificationsChanged, settingDarkMode, onSettingDarkModeChanged, settingOfflineMode, onSettingOfflineModeChanged)
             is Screen.Favorites -> EkranUlubione()
-            is Screen.Profile -> EkranProfil(formName, onFormNameChanged, formEmail, onFormEmailChanged, formCount, onFormCountChanged, formIsUrgent, onFormUrgentChanged, formSubmitted, formError, onSubmitForm)
+            is Screen.Profile -> EkranProfil(formName, onFormNameChanged, formEmail, onFormEmailChanged, formCount, onFormCountChanged, formType, onFormTypeChanged, formIsUrgent, onFormUrgentChanged, formSubmitted, formError, onSubmitForm)
         }
     }
 }
