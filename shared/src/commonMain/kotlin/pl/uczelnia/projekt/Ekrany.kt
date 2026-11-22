@@ -7,13 +7,16 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun EkranStartowy() {
     ObserwatorCyklu("Ekran_Start")
-    Card(modifier = Modifier.fillMaxWidth()) {
+    ElevatedCard(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text("System Zarządzania Ewakuacją", style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(8.dp))
@@ -30,11 +33,15 @@ fun EkranSzukaj(
     onFilterChanged: (String) -> Unit
 ) {
     ObserwatorCyklu("Ekran_Szukaj")
+    val focusManager = LocalFocusManager.current
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         OutlinedTextField(
             value = searchQuery,
             onValueChange = onSearchQueryChanged,
             label = { Text("Szukaj budynku / punktu zbiórki...") },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
             modifier = Modifier.fillMaxWidth()
         )
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -56,7 +63,7 @@ fun EkranPowiadomienia(
     onSettingOfflineModeChanged: (Boolean) -> Unit
 ) {
     ObserwatorCyklu("Ekran_Powiadomienia")
-    Card(modifier = Modifier.fillMaxWidth()) {
+    ElevatedCard(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text("Powiadomienia i Ustawienia", style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(12.dp))
@@ -93,7 +100,7 @@ fun EkranUlubione() {
                 KartaStatystyki(kategoria, liczba, Modifier.weight(1f))
             }
         }
-        Card(modifier = Modifier.fillMaxWidth()) {
+        ElevatedCard(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text("Gotowość operacyjna: $gotowe z $razem")
                 Spacer(modifier = Modifier.height(8.dp))
@@ -107,7 +114,7 @@ fun EkranUlubione() {
 
 @Composable
 private fun KartaStatystyki(nazwa: String, liczba: Int, modifier: Modifier = Modifier) {
-    Card(modifier = modifier) {
+    ElevatedCard(modifier = modifier) {
         Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             Text("$liczba", style = MaterialTheme.typography.headlineMedium)
             Text(nazwa, style = MaterialTheme.typography.bodySmall)
@@ -130,7 +137,8 @@ fun EkranProfil(
     onSubmitForm: () -> Unit
 ) {
     ObserwatorCyklu("Ekran_Profil")
-    Card(modifier = Modifier.fillMaxWidth()) {
+    val focusManager = LocalFocusManager.current
+    ElevatedCard(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text("Profil użytkownika i Formularz", style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(12.dp))
@@ -139,6 +147,8 @@ fun EkranProfil(
                 value = formName,
                 onValueChange = onFormNameChanged,
                 label = { Text("Imię i nazwisko *") },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 isError = formError && formName.isBlank(),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -151,7 +161,8 @@ fun EkranProfil(
                 value = formEmail,
                 onValueChange = onFormEmailChanged,
                 label = { Text("E-mail kontaktowy *") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
                 isError = formError && formEmail.isBlank(),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -164,7 +175,9 @@ fun EkranProfil(
                 value = formCount,
                 onValueChange = onFormCountChanged,
                 label = { Text("Liczba osób w grupie") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -191,7 +204,7 @@ fun EkranProfil(
             }
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick = onSubmitForm, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = { focusManager.clearFocus(); onSubmitForm() }, modifier = Modifier.fillMaxWidth()) {
                 Text("Zapisz profil / zgłoszenie")
             }
 

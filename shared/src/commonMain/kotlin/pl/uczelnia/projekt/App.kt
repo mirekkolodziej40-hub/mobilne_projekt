@@ -9,7 +9,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import pl.uczelnia.projekt.ui.theme.ProjektTheme
 
@@ -17,6 +20,7 @@ import pl.uczelnia.projekt.ui.theme.ProjektTheme
 fun App() {
     ObserwatorCyklu("AppRoot")
 
+    val focusManager = LocalFocusManager.current
     val systemDark = isSystemInDarkTheme()
     // Tryb ciemny z ekranu ustawień (domyślnie zgodny z systemem); zachowywany przy obrocie
     var settingDarkMode by rememberSaveable { mutableStateOf(systemDark) }
@@ -61,9 +65,9 @@ fun App() {
                         items.forEach { screen ->
                             NavigationRailItem(
                                 icon = { Icon(screen.icon, contentDescription = screen.title) },
-                                label = { Text(screen.title) },
+                                label = { Text(screen.etykieta, maxLines = 1, softWrap = false, style = MaterialTheme.typography.labelSmall) },
                                 selected = selectedScreen == screen,
-                                onClick = { selectedRoute = screen.route }
+                                onClick = { focusManager.clearFocus(); selectedRoute = screen.route }
                             )
                         }
                         Spacer(modifier = Modifier.weight(1f))
@@ -115,9 +119,9 @@ fun App() {
                             items.forEach { screen ->
                                 NavigationBarItem(
                                     icon = { Icon(screen.icon, contentDescription = screen.title) },
-                                    label = { Text(screen.title) },
+                                    label = { Text(screen.etykieta, maxLines = 1, softWrap = false, style = MaterialTheme.typography.labelSmall) },
                                     selected = selectedScreen == screen,
-                                    onClick = { selectedRoute = screen.route }
+                                    onClick = { focusManager.clearFocus(); selectedRoute = screen.route }
                                 )
                             }
                         }
@@ -194,10 +198,18 @@ fun ScreenContentRouter(
     onSettingOfflineModeChanged: (Boolean) -> Unit
 ) {
     val scrollState = rememberScrollState()
+    val focusManager = LocalFocusManager.current
+    // Przewijanie chowa klawiaturę
+    LaunchedEffect(scrollState.isScrollInProgress) {
+        if (scrollState.isScrollInProgress) focusManager.clearFocus()
+    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .imePadding()
+            // Dotknięcie tła chowa klawiaturę
+            .pointerInput(Unit) { detectTapGestures(onTap = { focusManager.clearFocus() }) }
             .verticalScroll(scrollState)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -36,3 +36,6 @@ val przykladoweElementy: List<EwakuacjaItem> =
     List(12) { EwakuacjaItem(it + 1, "Budynek ${it + 1}", "Budynki", if (it < 10) "Gotowy" else "W przygotowaniu") } +
     List(5) { EwakuacjaItem(100 + it, "Punkt zbiórki ${it + 1}", "Punkty zbiórki", if (it < 4) "Gotowy" else "W przygotowaniu") } +
     List(3) { EwakuacjaItem(200 + it, "Schron ${it + 1}", "Schrony", "Gotowy") }
+
+/** Krótka etykieta do dolnego paska (długie „Powiadomienia” nie mieści się w jednej linii). */
+val Screen.etykieta: String get() = if (this is Screen.Notifications) "Alerty" else title
